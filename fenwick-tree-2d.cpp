@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// A two-dimensional Fenwick Tree with point update range query, plus one
+// capable of range updates and range queries. A range operation with arguments
+// i1, i2, j1, j2 acts on the rectangle with corners (i1, i2) and (j1, j2).
+
 template <typename T>
 struct FenwickTree2d
 {
@@ -30,7 +34,6 @@ struct FenwickTree2d
         return x;
     }
 
-    // Sum in the rectangle with corners (i1, i2) and (j1, j2).
     T range_query(ptrdiff_t i1, ptrdiff_t i2, ptrdiff_t j1, ptrdiff_t j2)
     {
         T x = prefix_query(j1, j2);
