@@ -49,32 +49,36 @@ struct FenwickTree
 template <typename T>
 struct FenwickTreeRURQ
 {
-    FenwickTree<T> t1, t2;
+    array<FenwickTree<T>, 2> t;
+
+    FenwickTreeRURQ() {}
 
     FenwickTreeRURQ(size_t n)
     {
-        t1 = FenwickTree<T>(n);
-        t2 = FenwickTree<T>(n);
-    }
-
-    void increment(ptrdiff_t i, ptrdiff_t j, T x)
-    {
-        t1.increment(i, x);
-        t2.increment(i, x * i);
-        if ((size_t)j + 1 < t1.t.size())
-        {
-            t1.increment(j + 1, -x);
-            t2.increment(j + 1, -x * (j + 1));
-        }
+        t[0] = FenwickTree<T>(n);
+        t[1] = FenwickTree<T>(n);
     }
 
     T prefix_query(ptrdiff_t i)
     {
-        return t1.prefix_query(i) * (i + 1) - t2.prefix_query(i);
+        return t[0].prefix_query(i) * (i + 1) - t[1].prefix_query(i);
     }
 
     T range_query(ptrdiff_t i, ptrdiff_t j)
     {
         return prefix_query(j) - (i ? prefix_query(i - 1) : 0);
+    }
+
+    void suffix_increment(ptrdiff_t i, T x)
+    {
+        t[0].increment(i, x);
+        t[1].increment(i, x * i);
+    }
+
+    void increment(ptrdiff_t i, ptrdiff_t j, T x)
+    {
+        suffix_increment(i, x);
+        if ((size_t)j + 1 < t[0].t.size())
+            suffix_increment(j + 1, -x);
     }
 };
