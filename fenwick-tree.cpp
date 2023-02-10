@@ -1,8 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// A standard one-dimensional Fenwick Tree plus one supporting range updates
-// and range queries.
+/*
+A standard one-dimensional Fenwick Tree plus one supporting range updates
+and range queries. Both take O(log n) time for each type of query.
+*/
 
 template <typename T>
 struct FenwickTree

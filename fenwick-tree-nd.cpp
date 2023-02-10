@@ -1,10 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// An arbitrary-dimensional Fenwick Tree for point update range query, as well
-// as for range update range query. A range is specified by two arrays i and j,
-// where i contains the lower and j the upper limit (inclusive, 0-indexed) for
-// each dimension.
+/*
+An arbitrary-dimensional Fenwick Tree for point update range query, as well
+as for range update range query. A range is specified by two arrays i and j,
+where i contains the lower and j the upper limit for each dimension (inclusive,
+0-indexed).
+Point update range query runs in O(log n_1 * log n_2 * ... * log n_d) per query,
+where n_i is the size of the i-th dimension and d the number of dimensions.
+Range update range query takes O(4^d * log n_1 * log n_2 * ... * log n_d) time.
+*/
 
 template <typename T, size_t D>
 struct FenwickTree
