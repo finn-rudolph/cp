@@ -19,7 +19,7 @@ struct FenwickTree
 
     FenwickTree() {}
 
-    FenwickTree(array<size_t, D> const _n)
+    FenwickTree(array<size_t, D> const &_n)
     {
         n = _n;
         l[D - 1] = 1;
@@ -28,7 +28,7 @@ struct FenwickTree
         t = vector<T>(l[0] * n[0], 0);
     }
 
-    T prefix_query(array<ptrdiff_t, D> i, size_t d = 0, size_t ind = 0)
+    T prefix_query(array<int64_t, D> i, size_t d = 0, size_t ind = 0)
     {
         if (d == D)
             return t[ind];
@@ -43,7 +43,7 @@ struct FenwickTree
         return x;
     }
 
-    T range_query(array<ptrdiff_t, D> const &i, array<ptrdiff_t, D> const &j)
+    T range_query(array<int64_t, D> const &i, array<int64_t, D> const &j)
     {
         T x = prefix_query(j);
         size_t u = 0;
@@ -52,7 +52,7 @@ struct FenwickTree
 
         for (size_t v = u; v; v = (v - 1) & u)
         {
-            array<ptrdiff_t, D> query_vector;
+            array<int64_t, D> query_vector;
             for (size_t d = 0; d < D; d++)
                 query_vector[d] = (v & (1ULL << d)) ? i[d] - 1 : j[d];
             x += prefix_query(query_vector) * ((popcount(v) & 1) ? -1 : 1);
@@ -61,7 +61,7 @@ struct FenwickTree
         return x;
     }
 
-    void increment(array<ptrdiff_t, D> i, T x, size_t d = 0, size_t ind = 0)
+    void increment(array<int64_t, D> i, T x, size_t d = 0, size_t ind = 0)
     {
         if (d == D)
         {
@@ -77,7 +77,7 @@ struct FenwickTree
         }
     }
 
-    void set(array<ptrdiff_t, D> i, T x)
+    void set(array<int64_t, D> const &i, T x)
     {
         increment(i, x - range_query(i, i));
     }
@@ -91,19 +91,19 @@ struct FenwickTreeRURQ
 
     FenwickTreeRURQ() {}
 
-    FenwickTreeRURQ(array<size_t, D> const _n)
+    FenwickTreeRURQ(array<size_t, D> const &_n)
     {
         n = _n;
         for (size_t i = 0; i < 1ULL << D; i++)
             t[i] = FenwickTree<T, D>(n);
     }
 
-    T prefix_query(array<ptrdiff_t, D> i)
+    T prefix_query(array<int64_t, D> const &i)
     {
         T x = 0;
         for (size_t v = 0; v < 1ULL << D; v++)
         {
-            ptrdiff_t coefficient = (popcount(v) & 1) ? -1 : 1;
+            int64_t coefficient = (popcount(v) & 1) ? -1 : 1;
             for (size_t d = 0; d < D; d++)
                 coefficient *= (v & (1ULL << d)) ? 1 : i[d] + 1;
             x += t[v].prefix_query(i) * coefficient;
@@ -111,7 +111,7 @@ struct FenwickTreeRURQ
         return x;
     }
 
-    T range_query(array<ptrdiff_t, D> i, array<ptrdiff_t, D> j)
+    T range_query(array<int64_t, D> const &i, array<int64_t, D> const &j)
     {
         T x = prefix_query(j);
         size_t u = 0;
@@ -120,7 +120,7 @@ struct FenwickTreeRURQ
 
         for (size_t v = u; v; v = (v - 1) & u)
         {
-            array<ptrdiff_t, D> query_vector;
+            array<int64_t, D> query_vector;
             for (size_t d = 0; d < D; d++)
                 query_vector[d] = (v & (1ULL << d)) ? i[d] - 1 : j[d];
             x += prefix_query(query_vector) * ((popcount(v) & 1) ? -1 : 1);
@@ -129,18 +129,18 @@ struct FenwickTreeRURQ
         return x;
     }
 
-    void suffix_increment(array<ptrdiff_t, D> i, T x)
+    void suffix_increment(array<int64_t, D> const &i, T x)
     {
         for (size_t v = 0; v < 1ULL << D; v++)
         {
-            ptrdiff_t coefficient = 1;
+            int64_t coefficient = 1;
             for (size_t d = 0; d < D; d++)
                 coefficient *= (v & (1ULL << d)) ? i[d] : 1;
             t[v].increment(i, x * coefficient);
         }
     }
 
-    void increment(array<ptrdiff_t, D> i, array<ptrdiff_t, D> j, T x)
+    void increment(array<int64_t, D> const &i, array<int64_t, D> const &j, T x)
     {
         suffix_increment(i, x);
         size_t u = 0;
@@ -149,7 +149,7 @@ struct FenwickTreeRURQ
 
         for (size_t v = u; v; v = (v - 1) & u)
         {
-            array<ptrdiff_t, D> query_vector;
+            array<int64_t, D> query_vector;
             for (size_t d = 0; d < D; d++)
                 query_vector[d] = (v & (1ULL << d)) ? j[d] + 1 : i[d];
             suffix_increment(query_vector, x * ((popcount(v) & 1) ? -1 : 1));
