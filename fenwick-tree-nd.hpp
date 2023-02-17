@@ -28,17 +28,17 @@ struct FenwickTree
         t = vector<T>(l[0] * n[0], 0);
     }
 
-    T prefix_query(array<int64_t, D> i, size_t d = 0, size_t ind = 0)
+    T prefix_query(array<int64_t, D> const &i, size_t d = 0, size_t ind = 0)
     {
         if (d == D)
             return t[ind];
 
-        i[d]++;
+        size_t k = i[d] + 1;
         T x = 0;
-        while (i[d])
+        while (k)
         {
-            x += prefix_query(i, d + 1, ind + (i[d] - 1) * l[d]);
-            i[d] -= i[d] & -i[d];
+            x += prefix_query(i, d + 1, ind + (k - 1) * l[d]);
+            k -= k & -k;
         }
         return x;
     }
@@ -61,7 +61,8 @@ struct FenwickTree
         return x;
     }
 
-    void increment(array<int64_t, D> i, T x, size_t d = 0, size_t ind = 0)
+    void increment(
+        array<int64_t, D> const &i, T const &x, size_t d = 0, size_t ind = 0)
     {
         if (d == D)
         {
@@ -69,11 +70,11 @@ struct FenwickTree
             return;
         }
 
-        i[d]++;
-        while ((size_t)i[d] <= n[d])
+        uint64_t k = i[d] + 1;
+        while ((size_t)k <= n[d])
         {
-            increment(i, x, d + 1, ind + (i[d] - 1) * l[d]);
-            i[d] += i[d] & -i[d];
+            increment(i, x, d + 1, ind + (k - 1) * l[d]);
+            k += k & -k;
         }
     }
 
@@ -101,6 +102,7 @@ struct FenwickTreeRURQ
     T prefix_query(array<int64_t, D> const &i)
     {
         T x = 0;
+
         for (size_t v = 0; v < 1ULL << D; v++)
         {
             int64_t coefficient = (popcount(v) & 1) ? -1 : 1;
@@ -108,6 +110,7 @@ struct FenwickTreeRURQ
                 coefficient *= (v & (1ULL << d)) ? 1 : i[d] + 1;
             x += t[v].prefix_query(i) * coefficient;
         }
+
         return x;
     }
 
@@ -129,7 +132,7 @@ struct FenwickTreeRURQ
         return x;
     }
 
-    void suffix_increment(array<int64_t, D> const &i, T x)
+    void suffix_increment(array<int64_t, D> const &i, T const &x)
     {
         for (size_t v = 0; v < 1ULL << D; v++)
         {
@@ -140,7 +143,8 @@ struct FenwickTreeRURQ
         }
     }
 
-    void increment(array<int64_t, D> const &i, array<int64_t, D> const &j, T x)
+    void increment(
+        array<int64_t, D> const &i, array<int64_t, D> const &j, T const &x)
     {
         suffix_increment(i, x);
         size_t u = 0;
