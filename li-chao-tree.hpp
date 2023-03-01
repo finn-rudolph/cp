@@ -55,9 +55,9 @@ struct LiChaoNode
     T get_min(T x, T l, T r)
     {
         T y = f(x);
-        if (left)
+        if (left && x < (l + r) / 2)
             y = min(y, left->get_min(x, l, (l + r) / 2));
-        if (right)
+        if (right && x >= (l + r) / 2)
             y = min(y, right->get_min(x, (l + r) / 2, r));
         return y;
     }
