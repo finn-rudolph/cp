@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// A Segment Tree capable of maintaining the (concave downward) convex hull of
-// some set of linear functions f_1, f_2 ... . You can insert new functions and
-// query min(f_1(x), f_2(x), ...). Runs in O(log |D|) per query, where D is
-// the domain of the functions.
+/*
+A Segment Tree capable of maintaining the (concave downward) convex hull of some
+set of linear functions f_1, f_2 ... . You can insert new functions and query
+min(f_1(x), f_2(x), ...). Runs in O(log |D|) per query, where D is the domain of
+the functions.
+*/
 
 template <typename T>
 struct LinearFn
