@@ -56,8 +56,10 @@ bool segments_intersect(Segment<T> const &a, Segment<T> const &b)
             w = cross_product(a.first - b.first, a.second - b.first),
             x = cross_product(a.first - b.second, a.second - b.second);
     return (sign(u) != sign(v) && sign(w) != sign(x)) ||
-           point_on_segment(a, b.first) || point_on_segment(a, b.second) ||
-           point_on_segment(b, a.first) || point_on_segment(b, a.second);
+           point_on_segment<T, Epsilon>(a, b.first) ||
+           point_on_segment<T, Epsilon>(a, b.second) ||
+           point_on_segment<T, Epsilon>(b, a.first) ||
+           point_on_segment<T, Epsilon>(b, a.second);
 }
 
 template <typename T> // Returns 2 * the signed area of the given polygon.
