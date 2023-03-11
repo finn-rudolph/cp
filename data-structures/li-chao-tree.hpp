@@ -23,12 +23,13 @@ struct LinearFn
 template <typename T>
 struct LiChaoNode
 {
-    LiChaoNode<T> *left, *right;
+    unique_ptr<LiChaoNode<T>> left, right;
     LinearFn<T> f;
 
     LiChaoNode()
     {
-        left = right = 0;
+        left = nullptr;
+        right = nullptr;
         // If function values go higher, change the default maximum.
         f = LinearFn<T>(0, numeric_limits<T>::max() / 4);
     }
@@ -43,13 +44,13 @@ struct LiChaoNode
         if ((f(l) < g(l)) ^ (f(mid) < g(mid)))
         {
             if (!left)
-                left = new LiChaoNode();
+                left = make_unique<LiChaoNode<T>>();
             left->insert(g, l, (l + r) / 2);
         }
         else
         {
             if (!right)
-                right = new LiChaoNode();
+                right = make_unique<LiChaoNode<T>>();
             right->insert(g, (l + r) / 2, r);
         }
     }
@@ -62,15 +63,5 @@ struct LiChaoNode
         if (right && x >= (l + r) / 2)
             y = min(y, right->get_min(x, (l + r) / 2, r));
         return y;
-    }
-
-    void destroy()
-    {
-        if (left)
-            left->destroy();
-        if (right)
-            right->destroy();
-        delete left;
-        delete right;
     }
 };
