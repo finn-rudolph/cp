@@ -70,3 +70,34 @@ T polygon_area(Polygon<T> const &polygon)
         area += cross_product(polygon[i], polygon[(i + 1) % polygon.size()]);
     return area;
 }
+
+template <typename T>
+Polygon<T> grahams_scan(vector<complex<T>> const &p)
+{
+    complex<T> lowest = *min_element(
+        p.begin(), p.end(), [](complex<T> const &a, complex<T> const &b)
+        { return a.imag() == b.imag() ? a.real() < b.real() : a.imag() < b.imag(); });
+    vector<complex<T>> q;
+    for (auto const &z : p)
+        if (z != lowest)
+            q.push_back(z);
+    sort(q.begin(), q.end(), [&lowest](complex<T> const &a, complex<T> const &b)
+         {  T const u = cross_product(a - lowest, b - lowest);
+            if (!u)
+                return norm(a - lowest) < norm(b - lowest);
+            return u > 0; });
+
+    Polygon<T> h = {lowest};
+    for (auto const &z : q)
+    {
+        while (h.size() >= 2 &&
+               cross_product(*h.rbegin() - *++h.rbegin(), z - *h.rbegin()) <= 0)
+            h.pop_back();
+        h.push_back(z);
+    }
+
+    if (h.size() >= 3 &&
+        !cross_product(*h.rbegin() - *++h.rbegin(), lowest - *h.rbegin()))
+        h.pop_back();
+    return h;
+}
