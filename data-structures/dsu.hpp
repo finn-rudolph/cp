@@ -26,4 +26,6 @@ struct Dsu
     bool same_set(int64_t i, int64_t j) { return repr(i) == repr(j); }
 
     int64_t set_size(int64_t i) { return -p[repr(i)]; }
+
+    void reset() { fill(p.begin(), p.end(), -1); }
 };
