@@ -14,7 +14,7 @@ struct FenwickTree
 {
     T t = 0;
     void increment(T x) { t += x; }
-    T rangeSum() { return t; }
+    T range_sum() { return t; }
 };
 
 template <typename T, int64_t N, int64_t... Ns>
@@ -31,14 +31,14 @@ struct FenwickTree<T, N, Ns...>
     }
 
     template <typename... Args>
-    T rangeSum(int64_t i, int64_t j, Args... a)
+    T range_sum(int64_t i, int64_t j, Args... a)
     {
         T x = 0;
         ++j;
         while (j)
-            x += t[j - 1].rangeSum(a...), j -= j & -j;
+            x += t[j - 1].range_sum(a...), j -= j & -j;
         while (i)
-            x -= t[i - 1].rangeSum(a...), i -= i & -i;
+            x -= t[i - 1].range_sum(a...), i -= i & -i;
         return x;
     }
 };
@@ -48,7 +48,7 @@ struct FenwickTreeRURQ
 {
     T t = 0;
     void increment(T x) { t += x; }
-    T rangeSum() { return t; }
+    T range_sum() { return t; }
 };
 
 template <typename T, int64_t N, int64_t... Ns>
@@ -57,7 +57,7 @@ struct FenwickTreeRURQ<T, N, Ns...>
     FenwickTreeRURQ<T, Ns...> t[2][N];
 
     template <typename... Args>
-    void suffixIncrement(T x, int64_t i, Args... args)
+    void suffix_increment(T x, int64_t i, Args... args)
     {
         int64_t k = i + 1;
         while (k <= N)
@@ -71,27 +71,27 @@ struct FenwickTreeRURQ<T, N, Ns...>
     template <typename... Args>
     void increment(T x, int64_t i, int64_t j, Args... args)
     {
-        suffixIncrement(x, i, args...);
-        suffixIncrement(-x, j + 1, args...);
+        suffix_increment(x, i, args...);
+        suffix_increment(-x, j + 1, args...);
     }
 
     template <typename... Args>
-    T prefixSum(int64_t i, Args... args)
+    T prefix_sum(int64_t i, Args... args)
     {
         T x = 0;
         int64_t k = i + 1;
         while (k)
         {
-            x += (T)(i + 1) * t[0][k - 1].rangeSum(args...);
-            x -= t[1][k - 1].rangeSum(args...);
+            x += (T)(i + 1) * t[0][k - 1].range_sum(args...);
+            x -= t[1][k - 1].range_sum(args...);
             k -= k & -k;
         }
         return x;
     }
 
     template <typename... Args>
-    T rangeSum(int64_t i, int64_t j, Args... args)
+    T range_sum(int64_t i, int64_t j, Args... args)
     {
-        return prefixSum(j, args...) - (i ? prefixSum(i - 1, args...) : 0);
+        return prefix_sum(j, args...) - (i ? prefix_sum(i - 1, args...) : 0);
     }
 };
