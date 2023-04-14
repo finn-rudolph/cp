@@ -1,59 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template <typename T>
-using Matrix = vector<vector<T>>;
-
-template <typename T>
-Matrix<T> make_identity(size_t n)
+template <typename T, size_t N, size_t M>
+struct Matrix
 {
-    Matrix<T> a(n, vector<T>(n));
-    for (size_t i = 0; i < n; i++)
-        a[i][i] = 1;
-    return a;
-}
+    T x[N][M];
 
-template <typename T>
-Matrix<T> matrix_multiply(Matrix<T> const &a, Matrix<T> const &b)
-{
-    assert(a[0].size() == b.size());
-    Matrix<T> c(a.size(), vector<T>(b[0].size()));
+    T *operator[](size_t i) { return x[i]; }
 
-    for (size_t i = 0; i < c.size(); i++)
-        for (size_t j = 0; j < c[i].size(); j++)
-            for (size_t k = 0; k < b.size(); k++)
-                c[i][j] += a[i][k] * b[k][j];
-
-    return c;
-}
-
-template <typename T>
-Matrix<T> matrix_exp(Matrix<T> a, size_t y)
-{
-    Matrix<T> c = make_identity<T>(a.size());
-    for (size_t i = 0; i < c.size(); i++)
-        c[i][i] = 1;
-
-    while (y)
+    template <size_t L>
+    Matrix<T, N, L> operator*(Matrix<T, M, L> mat)
     {
-        if (y & 1)
-            c = matrix_multiply(c, a);
-        a = matrix_multiply(a, a);
-        y >>= 1;
+        Matrix<T, N, L> z;
+        for (size_t i = 0; i < N; ++i)
+            for (size_t j = 0; j < L; ++j)
+                for (size_t k = z[i][j] = 0; k < M; ++k)
+                    z[i][j] = z[i][j] + x[i][k] * mat[k][j];
+        return z;
     }
 
-    return c;
-}
+    Matrix<T, N, M> operator+(Matrix<T, N, M> mat)
+    {
+        Matrix<T, N, M> z;
+        for (size_t i = 0; i < N; i++)
+            for (size_t j = 0; j < M; j++)
+                z[i][j] = x[i][j] + mat[i][j];
+        return z;
+    }
 
-template <typename T>
-vector<T> matrix_vector_multiply(Matrix<T> const &a, vector<T> const &x)
+    array<T, N> operator*(array<T, M> vec)
+    {
+        array<T, N> z;
+        for (size_t i = 0; i < N; i++)
+            for (size_t j = z[i] = 0; j < M; j++)
+                z[i] = z[i] + x[i][j] * vec[j];
+        return z;
+    }
+};
+
+template <typename T, size_t N>
+Matrix<T, N, N> make_identity()
 {
-    assert(x.size() == a[0].size());
-    vector<T> y(a.size());
-
-    for (size_t i = 0; i < y.size(); i++)
-        for (size_t j = 0; j < x.size(); j++)
-            y[i] += a[i][j] * x[j];
-
-    return y;
+    Matrix<T, N, N> z;
+    memset(z.x, 0, sizeof z.x);
+    for (size_t i = 0; i < N; i++)
+        z[i][i] = 1;
+    return z;
 }
