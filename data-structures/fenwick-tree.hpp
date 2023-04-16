@@ -54,7 +54,7 @@ struct FenwickTreeRURQ
 template <typename T, int64_t N, int64_t... Ns>
 struct FenwickTreeRURQ<T, N, Ns...>
 {
-    FenwickTreeRURQ<T, Ns...> t[2][N];
+    FenwickTreeRURQ<T, Ns...> t[N][2];
 
     template <typename... Args>
     void suffix_increment(T x, int64_t i, Args... args)
@@ -62,8 +62,8 @@ struct FenwickTreeRURQ<T, N, Ns...>
         int64_t k = i + 1;
         while (k <= N)
         {
-            t[0][k - 1].increment(x, args...);
-            t[1][k - 1].increment(x * (T)i, args...);
+            t[k - 1][0].increment(x, args...);
+            t[k - 1][1].increment(x * (T)i, args...);
             k += k & -k;
         }
     }
@@ -82,8 +82,8 @@ struct FenwickTreeRURQ<T, N, Ns...>
         int64_t k = i + 1;
         while (k)
         {
-            x += (T)(i + 1) * t[0][k - 1].range_sum(args...);
-            x -= t[1][k - 1].range_sum(args...);
+            x += (T)(i + 1) * t[k - 1][0].range_sum(args...);
+            x -= t[k - 1][1].range_sum(args...);
             k -= k & -k;
         }
         return x;
