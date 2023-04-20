@@ -22,7 +22,7 @@ struct OrSegmentTree
             t[i] = t[2 * i] | t[2 * i + 1];
     }
 
-    ptrdiff_t previousNonzero(size_t i)
+    int64_t previous_nonzero(size_t i)
     {
         i += N;
         do
@@ -38,7 +38,7 @@ struct OrSegmentTree
         return -1;
     }
 
-    ptrdiff_t nextNonzero(size_t i)
+    int64_t next_nonzero(size_t i)
     {
         i += N;
         do
