@@ -6,7 +6,7 @@ struct Dsu
 {
     int64_t p[N];
 
-    Dsu(size_t n) { p = vector<int64_t>(n, -1); }
+    Dsu(size_t n) { fill(p, p + N, -1); }
 
     int64_t repr(int64_t u) { return p[u] < 0 ? u : p[u] = repr(p[u]); }
 

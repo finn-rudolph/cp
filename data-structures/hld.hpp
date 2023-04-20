@@ -48,6 +48,11 @@ struct Hld
         t.increment(ind[u], x);
     }
 
+    T subtree_sum(unsigned u)
+    {
+        return t.range_sum(ind[u], ind[u] + subtree_size[u] - 1);
+    }
+
     T path_sum(unsigned u, unsigned v)
     {
         T x = 0;
