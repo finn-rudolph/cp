@@ -1,9 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+template <size_t N>
 struct Dsu
 {
-    vector<int64_t> p;
+    int64_t p[N];
 
     Dsu(size_t n) { p = vector<int64_t>(n, -1); }
 
