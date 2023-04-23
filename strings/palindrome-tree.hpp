@@ -1,6 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+/*
+Data structure that maintains the palindromes of a string in a tree structure.
+"link" is the pointer to the next smaller suffix palindrome, it's 0 if there is
+none.
+*/
+
 template <size_t N>
 struct PalindromeTree
 {

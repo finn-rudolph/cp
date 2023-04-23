@@ -2,7 +2,7 @@
 using namespace std;
 
 template <size_t N>
-struct Lca
+struct Lca /* UNTESTED */
 {
     static constexpr size_t LGN = bit_ceil(N) + 1;
     unsigned anc[N][LGN], height[N];
