@@ -10,7 +10,8 @@ none.
 template <size_t N>
 struct PalindromeTree
 {
-    int64_t len[N], link[N], ch[N][26], cnt[N], n, x;
+    int len[N];
+    unsigned link[N], ch[N][26], cnt[N], n, x;
     string s;
 
     PalindromeTree()
