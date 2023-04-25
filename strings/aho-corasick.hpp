@@ -11,7 +11,7 @@ struct AhoCorasick
     unsigned ch[N][26], link[N], n;
     bitset<N> terminal;
 
-    AhoCorasick() { memset(ch[0], 0, sizeof ch[0]), link[0] = 0, n = 1; }
+    AhoCorasick() { memset(ch, 0, sizeof ch), link[0] = 0, n = 1; }
 
     void insert(string const &s)
     {
