@@ -1,6 +1,5 @@
 .vscode
 a.out
-*.cpp
 *.txt
 *.in
 *.out
