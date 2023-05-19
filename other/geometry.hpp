@@ -26,6 +26,19 @@ T cross_product(complex<T> const &a, complex<T> const &b)
     return (conj(a) * b).imag();
 }
 
+template <typename T>
+bool is_upper_half(complex<T> const &a)
+{
+    return a.real() >= 0 ? a.imag() >= 0 : a.imag() > 0;
+}
+
+template <typename T>
+bool compare_arg(complex<T> const &a, complex<T> const &b)
+{
+    bool const g = is_upper_half(a), h = is_upper_half(b);
+    return g == h ? cross_product(a, b) > 0 : g;
+}
+
 // Lines a and b are specified by segments. If this function is used for
 // finding a segment intersection, first check if the segments intersect.
 template <typename T>
