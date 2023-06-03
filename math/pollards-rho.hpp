@@ -14,7 +14,7 @@ struct Montgomery
 
     T reduce(U a) const
     {
-        return (a >> (sizeof(T) << 3)) + n - ((U)((T)a * r) * n) >> (sizeof(T) << 3);
+        return (a >> (sizeof(T) << 3)) + n - (((U)((T)a * r) * n) >> (sizeof(T) << 3));
     }
 
     T multiply(T a, T b) { return reduce((U)a * b); }
@@ -44,7 +44,26 @@ T binary_gcd(T a, T b)
     return b << w;
 }
 
-template <typename T>
-T pollards_rho(T n)
+template <typename T, typename U>
+T pollards_rho(T n, T seed)
 {
+    Montgomery<T, U> mtg(n);
+    size_t const block_size = __lg(n);
+    T x = seed;
+
+    for (size_t l = block_size;; l <<= 1)
+    {
+        T y = x, p = 1;
+        for (size_t i = 0; i < l; i += block_size)
+        {
+            for (size_t j = 0; j < block_size; ++j)
+            {
+                x = mtg.multiply(x, x) + 1;
+                p = mtg.multiply(p, y > x ? y - x : x - y);
+            }
+            T const g = binary_gcd(p, n);
+            if (g != 1)
+                return g;
+        }
+    }
 }
