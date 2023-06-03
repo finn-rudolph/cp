@@ -67,3 +67,31 @@ T pollards_rho(T n, T seed)
         }
     }
 }
+
+template <typename T>
+bool miller_rabin(T n, size_t iterations)
+{
+    while (iterations--)
+    {
+        T a = mt() % n;
+        T t = countr_zero(n), u = n >> t, x = 1;
+        while (u)
+        {
+            if (u & 1)
+                x = (x * a) % n;
+            a = (a * a) % n;
+            u >>= 1;
+        }
+        u = n >> t;
+        while (t--)
+        {
+            T const y = (x * x) % n;
+            if (y == 1 && x != 1 && x != n - 1)
+                return 0;
+            x = y;
+        }
+        if (x != 1)
+            return 0;
+    }
+    return 1;
+}
