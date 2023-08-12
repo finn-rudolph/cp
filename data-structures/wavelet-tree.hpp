@@ -44,12 +44,12 @@ struct WaveletTree
 
     int map_left(unsigned node, int i)
     {
-        return t[node].x[i] - 1;
+        return i >= 0 ? t[node].x[i] - 1 : -1;
     }
 
     int map_right(unsigned node, int i)
     {
-        return i - t[node].x[i];
+        return i >= 0 ? i - t[node].x[i] : -1;
     }
 
     unsigned rank(T q, int i, unsigned node = 0, T a = 0, T b = sigma)
@@ -64,5 +64,18 @@ struct WaveletTree
             return rank(q, map_left(node, i), t[node].l, a, mid);
         else
             return rank(q, map_right(node, i), t[node].r, mid + 1, b);
+    }
+
+    T quantile(int i, int j, int k, unsigned node = 0, T a = 0, T b = sigma)
+    {
+        if (a == b)
+            return a;
+        int c = map_left(node, j) - map_left(node, i - 1);
+        if (c >= k)
+            return quantile(map_left(node, i - 1) + 1,
+                            map_left(node, j), k, t[node].l, a, (a + b) / 2);
+        else
+            return quantile(map_right(node, i - 1) + 1,
+                            map_right(node, j), k - c, t[node].r, (a + b) / 2 + 1, b);
     }
 };
