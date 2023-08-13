@@ -42,12 +42,12 @@ struct WaveletTree
         return node;
     }
 
-    int map_left(unsigned node, int i)
+    inline int map_left(unsigned node, int i)
     {
         return i >= 0 ? t[node].x[i] - 1 : -1;
     }
 
-    int map_right(unsigned node, int i)
+    inline int map_right(unsigned node, int i)
     {
         return i >= 0 ? i - t[node].x[i] : -1;
     }
@@ -77,5 +77,16 @@ struct WaveletTree
         else
             return quantile(map_right(node, i - 1) + 1,
                             map_right(node, j), k - c, t[node].r, (a + b) / 2 + 1, b);
+    }
+
+    unsigned count(int i, int j, T x, T y, unsigned node = 0, T a = 0, T b = sigma)
+    {
+        if (node == UINT_MAX || b < x || a > y)
+            return 0;
+        if (x <= a && b <= y)
+            return j - i + 1;
+
+        return count(map_left(node, i - 1) + 1, map_left(node, j), x, y, t[node].l, a, (a + b) / 2) +
+               count(map_right(node, i - 1) + 1, map_right(node, j), x, y, t[node].r, (a + b) / 2 + 1, b);
     }
 };
