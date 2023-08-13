@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+/*
+A simple wavelet tree without any augmentations.
+*/
+
 template <typename T, T sigma, int L>
 struct WaveletTree
 {
@@ -88,5 +92,24 @@ struct WaveletTree
 
         return count(map_left(node, i - 1) + 1, map_left(node, j), x, y, t[node].l, a, (a + b) / 2) +
                count(map_right(node, i - 1) + 1, map_right(node, j), x, y, t[node].r, (a + b) / 2 + 1, b);
+    }
+
+    void swap_adjacent(int i, unsigned node = 0)
+    {
+        if ((map_left(node, i + 1) - map_left(node, i - 1)) & 1)
+        {
+            // Element i and i + 1 are mapped to different children.
+            if (map_left(node, i) != map_left(node, i - 1))
+                t[node].x[i]--;
+            else
+                t[node].x[i]++;
+        }
+        else
+        {
+            if (map_left(node, i) != map_left(node, i - 1))
+                swap_adjacent(map_left(node, i), t[node].l);
+            else
+                swap_adjacent(map_right(node, i), t[node].r);
+        }
     }
 };
